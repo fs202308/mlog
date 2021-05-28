@@ -1,4 +1,4 @@
-package mlog
+package github.com/bsync-tech/mlog
 
 import (
 	"go.uber.org/zap/zapcore"
