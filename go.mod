@@ -1,4 +1,4 @@
-module mlog
+module github.com/bsync-tech/mlog
 
 go 1.15
 
