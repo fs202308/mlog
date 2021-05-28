@@ -1,4 +1,4 @@
-package mlog
+package github.com/bsync-tech/mlog
 
 import (
 	"net"
