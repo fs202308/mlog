@@ -46,8 +46,8 @@ func Init(c *LogConfig) {
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
-		EncodeDuration: zapcore.SecondsDurationEncoder,
-		EncodeCaller:   zapcore.ShortCallerEncoder, // 短路径编码器
+		EncodeDuration: zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000"),
+		// EncodeCaller:   zapcore.ShortCallerEncoder, // 短路径编码器
 		EncodeName:     zapcore.FullNameEncoder,
 	}
 	writers := []zapcore.WriteSyncer{}
