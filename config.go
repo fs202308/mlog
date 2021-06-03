@@ -45,10 +45,10 @@ func Init(c *LogConfig) {
 		StacktraceKey:  "stacktrace",
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zapcore.ISO8601TimeEncoder,
-		EncodeDuration: zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000"),
+		EncodeTime:     zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05.000"),
+		EncodeDuration: zapcore.SecondsDurationEncoder,
 		// EncodeCaller:   zapcore.ShortCallerEncoder, // 短路径编码器
-		EncodeName:     zapcore.FullNameEncoder,
+		EncodeName: zapcore.FullNameEncoder,
 	}
 	writers := []zapcore.WriteSyncer{}
 	switch c.Mode {
@@ -70,18 +70,14 @@ func Init(c *LogConfig) {
 	atomicLevel := GetAtomicLevel(c.Level)
 	core := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), zapcore.NewMultiWriteSyncer(writers...), atomicLevel)
 	// 开启开发模式，堆栈跟踪
-	caller := zap.AddCaller()
+	// caller := zap.AddCaller()
 	// 开启文件及行号
 	development := zap.Development()
 	// 设置初始化字段
 	field := zap.Fields(zap.String("appName", c.Name))
 	// 构造日志
-	log = zap.New(core, caller, development, field)
+	log = zap.New(core, development, field)
 	log.Info("mlog init success")
-}
-
-func GetLogger() *zap.Logger {
-	return log
 }
 
 func Debug(msg string, fields ...zapcore.Field) {
