@@ -80,6 +80,10 @@ func Init(c *LogConfig) {
 	log.Info("mlog init success")
 }
 
+func GetLogger() *zap.Logger {
+	return log
+}
+
 func Debug(msg string, fields ...zapcore.Field) {
 	log.Debug(msg, fields...)
 }
