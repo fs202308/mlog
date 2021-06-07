@@ -20,6 +20,7 @@ func (n *NlogLogger) Write(p []byte) (int, error) {
 }
 
 func (n *NlogLogger) Init(c *LogConfig) zapcore.WriteSyncer {
+	n.tag = c.NlogTag
 	udpaddr, err := net.ResolveUDPAddr("udp4", c.NlogRemoteAddr)
 	if err != nil {
 		panic(err)
