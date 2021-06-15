@@ -25,9 +25,9 @@ type LogConfig struct {
 	// file compress
 	FileCompress bool `yaml:"file_compress" json:"file_compress"`
 
-	// nlog tag
-	NlogTag string `yaml:"nlog_tag" json:"nlog_tag"`
-	// nlog remote addr tag
+	// nlog tags
+	NlogTags map[string]string `yaml:"nlog_tag" json:"nlog_tag"`
+	// nlog remote addr
 	NlogRemoteAddr string `yaml:"nlog_remote_addr" json:"nlog_remote_addr"`
 }
 
@@ -50,33 +50,44 @@ func Init(c *LogConfig) {
 		// EncodeCaller:   zapcore.ShortCallerEncoder, // 短路径编码器
 		EncodeName: zapcore.FullNameEncoder,
 	}
-	writers := []zapcore.WriteSyncer{}
-	switch c.Mode {
-	case "file":
-		fileLogger := new(FileLogger)
-		fileWriter := fileLogger.Init(c)
-		writers = append(writers, fileWriter)
-	case "console":
-		consoleLogger := new(ConsoleLogger)
-		fileWriter := consoleLogger.Init(c)
-		writers = append(writers, fileWriter)
-	case "nlog":
-		nlogLogger := new(NlogLogger)
-		nlogWriter := nlogLogger.Init(c)
-		writers = append(writers, nlogWriter)
-	}
 
-	// 设置日志级别
-	atomicLevel := GetAtomicLevel(c.Level)
-	core := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), zapcore.NewMultiWriteSyncer(writers...), atomicLevel)
 	// 开启开发模式，堆栈跟踪
 	// caller := zap.AddCaller()
 	// 开启文件及行号
 	development := zap.Development()
 	// 设置初始化字段
 	field := zap.Fields(zap.String("appName", c.Name))
-	// 构造日志
-	log = zap.New(core, development, field)
+	// 设置日志级别
+	atomicLevel := GetAtomicLevel(c.Level)
+
+	writers := []zapcore.WriteSyncer{}
+	switch c.Mode {
+	case "file":
+		fileLogger := new(FileLogger)
+		fileWriter := fileLogger.Init(c)
+		writers = append(writers, fileWriter)
+		coren := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), zapcore.NewMultiWriteSyncer(writers...), atomicLevel)
+		log = zap.New(coren, development, field)
+	case "console":
+		consoleLogger := new(ConsoleLogger)
+		fileWriter := consoleLogger.Init(c)
+		writers = append(writers, fileWriter)
+
+		coren := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), zapcore.NewMultiWriteSyncer(writers...), atomicLevel)
+		log = zap.New(coren, development, field)
+	case "nlog":
+		cores := make([]zapcore.Core, 0)
+		for k, v := range c.NlogTags {
+			nlogLogger := new(NlogLogger)
+			nlogLogger.tag = v
+			nlogLogger.level = k
+			nlogWriter := nlogLogger.Init(c)
+			cores = append(cores, zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), nlogWriter, GetAtomicLevelEnableFuncEqual(k)))
+		}
+		coresn := zapcore.NewTee(cores...)
+		log = zap.New(coresn, development, field)
+	}
+
 	log.Info("mlog init success")
 }
 

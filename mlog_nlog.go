@@ -10,17 +10,17 @@ import (
 
 type NlogLogger struct {
 	tag    string
+	level  string
 	remote string
 	conn   *net.UDPConn
 }
 
 func (n *NlogLogger) Write(p []byte) (int, error) {
-	n.conn.Write([]byte(n.getNlogPrefix() + " [Debug] " + string(p)))
+	n.conn.Write([]byte(n.getNlogPrefix() + " [" + n.level + "] " + string(p)))
 	return len(p), nil
 }
 
 func (n *NlogLogger) Init(c *LogConfig) zapcore.WriteSyncer {
-	n.tag = c.NlogTag
 	udpaddr, err := net.ResolveUDPAddr("udp4", c.NlogRemoteAddr)
 	if err != nil {
 		panic(err)

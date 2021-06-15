@@ -1,5 +1,5 @@
 name: fapp
-mode: console
+mode: nlog
 level: debug
 file_path: "./log"
 file_max_size: 128
@@ -7,5 +7,10 @@ file_retain_days: 30
 file_max_backups: 30
 file_compress: true
 
-nlog_tag: 5414
+nlog_tag:
+  debug: 5401
+  info: 5402
+  warn: 5403
+  error: 5404
+  default: 5401
 nlog_remote_addr: 192.168.64.113:5211
