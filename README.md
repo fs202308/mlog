@@ -19,11 +19,11 @@ log library with go, console、file、syslog3164(nlog) supported, this repo main
         file_compress: true
 
         nlog_tag:
-        debug: 5401
-        info: 5402
-        warn: 5403
-        error: 5404
-        default: 5401
+          debug: 5401
+          info: 5402
+          warn: 5403
+          error: 5404
+          default: 5401
         nlog_remote_addr: 192.168.64.113:5211`
         
     var c mlog.LogConfig
