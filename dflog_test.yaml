@@ -1,0 +1,8 @@
+name: fapp
+# support nlog console file dflog
+mode: dflog
+level: debug
+
+dflog_subsys: subsys_name
+dflog_module: module_name
+dflog_remote_addr: 10.2.8.203:10028
