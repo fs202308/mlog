@@ -2,7 +2,7 @@ package main
 
 import (
 	"io/ioutil"
-	"github.com/bsync-tech/mlog"
+	"github.com/fs202308/mlog"
 
 	"gopkg.in/yaml.v2"
 )
