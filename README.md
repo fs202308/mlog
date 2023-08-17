@@ -4,7 +4,7 @@ log library with go, console、file、syslog3164(nlog) supported, this repo main
 
 ## Installation
 
-`go get -u github.com/bsync-tech/mlog`
+`go get -u github.com/fs202308/mlog`
 
 ## Quick Start
 
