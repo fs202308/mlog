@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/bsync-tech/mlog"
+	"github.com/fs202308/mlog"
 	"gopkg.in/yaml.v2"
 )
 
